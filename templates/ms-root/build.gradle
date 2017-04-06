@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:latest.release")
+    }
+}
+
+group = "${group}"
+version = "${version}"
+
+
+allprojects {
+    dependencies {}
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+
+    repositories {
+        jcenter()
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    jar {
+        archiveName = project.name + ".jar"
+    }
+
+    dependencies {
+
+        compile 'org.springframework.boot:spring-boot-starter-web:latest.release'
+        compile 'org.springframework.boot:spring-boot-starter-actuator:latest.release'
+
+        compileOnly 'org.projectlombok:lombok:latest.release'
+
+        testCompile 'org.springframework.boot:spring-boot-starter-test:latest.release'
+    }
+
+    task dockerBuild {
+        doLast {
+            exec {
+                commandLine 'docker', 'build', '--force-rm=true', "--tag='" + project.name + ":" + project.version + "'", '.'
+            }
+        }
+    }
+
+    dockerBuild.dependsOn build
+
+    springBoot {
+        executable = true
+    }
+
+}

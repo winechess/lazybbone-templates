@@ -1,0 +1,23 @@
+group = "${group}"
+version = "${version}"
+
+dependencies {
+//
+//  compile 'org.springframework.cloud:spring-cloud-starter-feign:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-starter-ribbon:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-starter-sleuth:latest.release'
+//
+//  compile 'org.springframework.cloud:spring-cloud-starter-hystrix:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-netflix-hystrix-stream:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit:latest.release'
+//
+//  compile 'org.springframework.cloud:spring-cloud-starter-eureka:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-starter-hystrix:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-starter-eureka-server:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-config-server:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-starter-zuul:latest.release'
+//
+//  compile 'org.springframework.cloud:spring-cloud-consul-core:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-consul-discovery:latest.release'
+//  compile 'org.springframework.cloud:spring-cloud-consul-config:latest.release'
+}
