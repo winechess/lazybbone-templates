@@ -45,7 +45,7 @@ subprojects {
     task dockerBuild {
         doLast {
             exec {
-                commandLine 'docker', 'build', '--force-rm=true', "--tag=" + project.name + ":" + project.version, '.'
+                commandLine 'docker', 'build', '--force-rm=true', "-t", "$project.name:$project.version", "-t", "$project.name:latest", '.'
             }
         }
     }

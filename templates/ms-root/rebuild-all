@@ -1,0 +1,3 @@
+./gradlew dB
+docker-compose up -d
+docker-compose logs --follow
