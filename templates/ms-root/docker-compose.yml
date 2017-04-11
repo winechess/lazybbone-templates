@@ -1,36 +1,15 @@
-# version: "3"
+version: "3"
 
-# services:
+services:
 
-#   consul-server:
-#     image: consul
-#     container_name: consul-server
-#     ports:
-#         - "8400:8400"
-#         - "8500:8500"
-#         - "53:8600/udp"
-#     command: "agent -server -bootstrap -client=0.0.0.0 -node=consul-server -ui"
-#     restart: always
+  config-server:
+    build: config-server
+    ports:
+      - 8888:8888
 
-#  registrator:
-#    image: gliderlabs/registrator
-#    container_name: registrator
-#    volumes:
-#      - "/var/run/docker.sock:/tmp/docker.sock"
-#    command: "consul://consul-server:8500"
-#    restart: always
-
-#  gateway-server:
-#    image: gateway-server
-#    container_name: gateway-server
-#    ports:
-#      - "9000:9000"
-#    restart: always
-
-
-#  service1:
-#    image: service1
-#    container_name: service1
-#    ports:
-#      - "8080"
-#    restart: always
+ service1:
+   image: service1
+   container_name: service1
+   ports:
+     - "8080"
+   restart: always

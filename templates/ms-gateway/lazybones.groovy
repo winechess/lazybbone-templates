@@ -6,9 +6,9 @@ import static java.nio.file.Paths.get
 
 def props = [:]
 
-props.group = ask('Group [com.example.root.module]: ', 'com.example.root.module').replace('.' as char, '/' as char).replace('-' as char, '_' as char)
+props.group = ask('Group [com.example.root.module]: ', 'com.example.root.module').replace('-' as char, '_' as char)
 props.version = ask('Version [0.0.1]: ', '0.0.1')
-props.appName = ask('Application name [MyApplication]: ', 'MyApplication')
+props.mainClass = ask('Application name [MyApplication]: ', 'MyApplication')
 props.projectName = projectDir.name
 props.dockerHost = "192.168.99.100"
 
@@ -25,13 +25,13 @@ processTemplates mainApplicationFileName, props
 processTemplates testMainApplicationFileName, props
 processTemplates rebuildScriptFileName, props
 
-String pkgPath = props.group
+String pkgPath = props.group.replace('.' as char, '/' as char)
 
 Path templatePath = templateDir.toPath()
 Path projectPath = projectDir.toPath()
 
 Path javaSourceDirWithPackage = get projectPath as String, 'src/main/java/', pkgPath
-Path destinationAppFilePath = javaSourceDirWithPackage.resolve props.appName+".java"
+Path destinationAppFilePath = javaSourceDirWithPackage.resolve props.mainClass+".java"
 Path templateApplicationPath = templatePath.resolve mainApplicationFileName
 Path templateRebuildScriptPath = templatePath.resolve rebuildScriptFileName
 
@@ -39,7 +39,7 @@ javaSourceDirWithPackage.toFile() mkdirs()
 
 Path javaTestSourceDirWithPackage = get projectPath as String, 'src/test/java/', pkgPath
 Path templateTestApplicationPath = templatePath.resolve testMainApplicationFileName
-Path destinationTestAppFilePath = javaTestSourceDirWithPackage.resolve props.appName+"Tests.java"
+Path destinationTestAppFilePath = javaTestSourceDirWithPackage.resolve props.mainClass+"Tests.java"
 
 javaTestSourceDirWithPackage.toFile() mkdirs()
 

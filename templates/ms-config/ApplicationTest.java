@@ -15,4 +15,3 @@ public class ${mainClass}Tests {
     public void contextLoads() {}
 
 }
-

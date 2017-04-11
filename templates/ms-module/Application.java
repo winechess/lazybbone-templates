@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootApplication
-public class ${appName} {
+public class ${mainClass} {
     public static void main(String[] args) {
-        SpringApplication.run(${appName}.class, args);
+        SpringApplication.run(${mainClass}.class, args);
     }
 }
