@@ -3,6 +3,26 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/user/project/config-server
+          #link to local config repo for developing
+          uri: file://\${user.home}/${configDir}
+#          uri: https://github.com/{username}/{repo}
+#          searchPaths: folder with configs in repo (optional if repo contains only configs)
 server:
-  port: 8888
+  #SERVER_PORT: default 8888
+  port: ${serverPort}
+#Encryption configuration to encrypt properties in config files
+encrypt:
+  #keystore settings to use encryption with an asymmetric key
+  keyStore:
+    #KEYSTORE_PATH
+    location: classpath:/server.jks
+    password: {KEYSTORE_PASSWORD}
+    alias: {KEY_ALIAS}
+    secret: {KEY_PASSWORD}
+  #key to use encryption with a symmetric key
+  #key: {KEY_VALUE}
+#user name and password to protect config server
+security:
+  user:
+    name: {USER.NAME}
+    password: {USER.PASSWORD}

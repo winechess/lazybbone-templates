@@ -1,0 +1,19 @@
+server:
+  port: ${serverPort}
+zuul:
+  ribbon-isolation-strategy: thread
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
+
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000

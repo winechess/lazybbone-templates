@@ -1,3 +1,3 @@
-# ${projectName}
+# ${projectName} project
 
-Description of this project here.
+Root project that contains all microservices.

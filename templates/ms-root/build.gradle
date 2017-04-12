@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:\${springBootVersion}")
     }
 }
 
@@ -51,13 +51,13 @@ allprojects {
 subprojects {
 
     jar {
-        archiveName = project.name + ".jar"
+        archiveName = "\${project.name}.jar"
     }
 
     task dockerBuild {
         doLast {
             exec {
-                commandLine 'docker', 'build', '--force-rm=true', "-t", "$project.name:$project.version", "-t", "$project.name:latest", '.'
+                commandLine 'docker', 'build', '--force-rm=true', "-t", "\${project.name}:\${project.version}", "-t", "\${project.name}:latest", '.'
             }
         }
     }

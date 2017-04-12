@@ -9,22 +9,26 @@ import static java.nio.file.Paths.get
 /******************************************************************************/
 
 def props = [:]
+
 props.group = ask('Group [com.example.root.module]: ', 'com.example.root.module').replace('-' as char, '_' as char)
 props.version = ask('Version [0.0.1]: ', '0.0.1')
-props.mainClass = ask('Main class [MyApplication]: ', 'MyApplication')
+props.mainClass = ask('Main class [ConfigServerApplication]: ', 'ConfigServerApplication')
+props.serverPort = ask('Port to run on [8888]: ', '8888')
+props.configDir = ask('Directory for configurations [config-repo]: ', 'config-repo')
 props.projectName = projectDir.name
+
 String pkgPath = props.group.replace('.' as char, '/' as char)
+String configRepoDir = props.configDir
+
 /******************************************************************************/
 /******************** DEFINE TEMPLATE FILE NAMES SECTION  *********************/
 /******************************************************************************/
 
-String mainApplicationFileName = 'Application.java'
-String testMainApplicationFileName = 'ApplicationTest.java'
-String resourceFileName = 'application.yml'
-String testResourceFileName = 'application-test.yml'
-String defaultResourceFileName = 'application-default.yml'
-String rebuildScriptFileName = 'rebuild.sh'
-String rebuildScriptFileNamePrefix = 'rebuild'
+String mainClassFilename = 'Application.java'
+String testMainClassFilename = 'ApplicationTest.java'
+String configFileName = 'application.yml'
+String testConfigFileName = 'application-test.yml'
+String commonConfigFilename = 'application-default.yml'
 String buildFileName = 'build.gradle'
 String dockerFileName = 'Dockerfile'
 String readmeFileName = 'README.md'
@@ -34,13 +38,12 @@ String readmeFileName = 'README.md'
 /******************************************************************************/
 
 processTemplates buildFileName, props
-processTemplates resourceFileName, props
-processTemplates testResourceFileName, props
+processTemplates configFileName, props
+processTemplates testConfigFileName, props
 processTemplates dockerFileName, props
 processTemplates readmeFileName, props
-processTemplates mainApplicationFileName, props
-processTemplates testMainApplicationFileName, props
-processTemplates rebuildScriptFileName, props
+processTemplates mainClassFilename, props
+processTemplates testMainClassFilename, props
 
 /******************************************************************************/
 /*****************  DEFINE PATHS SECTION START  *******************************/
@@ -48,7 +51,7 @@ processTemplates rebuildScriptFileName, props
 
 Path templatePath = templateDir.toPath()
 Path projectPath = projectDir.toPath()
-Path configDirPath = projectPath.parent.resolve('config-repo')
+Path configDirPath = projectPath.parent.resolve("${configRepoDir}")
 
 //MAIN STRUCTURE
 
@@ -58,17 +61,15 @@ Path srcDirWithPkg = get projectPath as String, 'src/main/java/', pkgPath
 Path javaResourceDir = projectPath.resolve 'src/main/resources'
 
 // define path to main class file in template
-Path mainClassTpl = templatePath.resolve mainApplicationFileName
+Path mainClassTpl = templatePath.resolve mainClassFilename
 // define path to destination main class file
-Path mainClassDst = srcDirWithPkg.resolve props.mainClass+".java"
+Path mainClassDst = srcDirWithPkg.resolve "${props.mainClass}.java"
 
 // define path to application property file in template
-Path propFileTpl = templatePath.resolve resourceFileName
+Path configTpl = templatePath.resolve configFileName
 // define path to destination application property file
-Path propFileDst = javaResourceDir.resolve resourceFileName
+Path configDst = javaResourceDir.resolve configFileName
 
-// define path to rebuild script file in template
-Path rebuildScriptTpl = templatePath.resolve rebuildScriptFileName
 
 //TEST STRICTURE
 
@@ -78,21 +79,21 @@ Path testDirWithPkg = get projectPath as String, 'src/test/java/', pkgPath
 Path testResDirWithPkg = projectPath.resolve 'src/test/resources'
 
 // define path to test main class
-Path testMainClassTpl = templatePath.resolve testMainApplicationFileName
+Path testMainClassTpl = templatePath.resolve testMainClassFilename
 //define destination to main class in test package
-Path testMainClassDst = testDirWithPkg.resolve props.mainClass+"Test.java"
+Path testMainClassDst = testDirWithPkg.resolve "${props.mainClass}Test.java"
 
 // define path to test application property file in template
-Path testPropFileTpl = templatePath.resolve testResourceFileName
+Path testConfigTpl = templatePath.resolve testConfigFileName
 // define destination path to test application property file
-Path testPropFileDst = testResDirWithPkg.resolve resourceFileName
+Path testConfigDst = testResDirWithPkg.resolve configFileName
 
 //CONFIG REPO STRUCTURE
 
 // define path to default application property file in template
-Path defaultPropFileTpl = templatePath.resolve defaultResourceFileName
+Path commonConfigTpl = templatePath.resolve commonConfigFilename
 // define destination path to test application property file
-Path defaultPropFileDst = configDirPath.resolve resourceFileName
+Path commonConfigDst = configDirPath.resolve configFileName
 
 
 /******************************************************************************/
@@ -112,18 +113,40 @@ try {
     move testMainClassTpl, testMainClassDst
 
     //move property file to main resource dir
-    move propFileTpl, propFileDst
+    move configTpl, configDst
     //move property file to test resource dir
-    move testPropFileTpl, testPropFileDst
+    move testConfigTpl, testConfigDst
     //move default property file to config dir
-    move defaultPropFileTpl, defaultPropFileDst
+    move commonConfigTpl, commonConfigDst
 
-    Path newRebuildScriptPath = projectPath.parent.resolve rebuildScriptFileNamePrefix+'-'+projectDir.name as String
-    if(notExists(newRebuildScriptPath)){
+    createRebuildScript templatePath, projectPath, props
+    attachProjectToRoot projectPath
+    addProjectToDockerCompose projectPath, props
+
+} catch (ignored) {
+    ignored.printStackTrace()
+    println '^'*50
+    println 'ignored exception'.center(50,'^')
+    println '^'*50
+}
+
+void createRebuildScript(templatePath, projectPath, props) {
+
+    String rebuildScriptFileName = 'rebuild.sh'
+    processTemplates rebuildScriptFileName, props
+    Path rebuildScriptTpl = templatePath.resolve rebuildScriptFileName
+
+    String rebuildScriptFileNamePrefix = 'rebuild'
+    Path newRebuildScriptPath = projectPath.parent.resolve "${rebuildScriptFileNamePrefix}-${projectDir.name}"
+
+    if (notExists(newRebuildScriptPath)) {
         move rebuildScriptTpl, newRebuildScriptPath
         setPosixFilePermissions newRebuildScriptPath, PosixFilePermissions.fromString("rwxr-xr-x")
     }
 
+}
+
+void attachProjectToRoot(projectPath) {
     Path newSettingsPath = projectPath.parent.resolve('settings.gradle')
     File newSettingsFile = newSettingsPath.toFile()
 
@@ -146,9 +169,38 @@ try {
         }
         writer.close()
     }
-} catch (ignored) {
-    ignored.printStackTrace()
-    println '^'*50
-    println 'ignored exception'.center(50,'^')
-    println '^'*50
+}
+
+
+void addProjectToDockerCompose(projectPath, props) {
+    Path dockerComposePath = projectPath.parent.resolve('docker-compose.yml')
+    File dockerComposeFile = dockerComposePath.toFile()
+
+    if (notExists(dockerComposePath)) {
+        dockerComposeFile = createFile dockerComposePath toFile()
+    }
+
+    def currentConfigDump = dockerComposeFile.text
+
+    dockerComposeFile.withWriter { writer ->
+        currentConfigDump.eachLine { line ->
+            if (line.contains('end includes')) {
+                writer << "\t${projectDir.name}:"
+                writer << '\n'
+                writer << "\t\timage: ${projectDir.name}"
+                writer << '\n'
+                writer << "\t\trestart: always"
+                writer << '\n'
+                writer << "\t\tports:"
+                writer << '\n'
+                writer << "\t\t\t- ${props.serverPort}:${props.serverPort}"
+                writer << '\n'
+            }
+
+            writer << line
+            writer << '\n'
+
+        }
+        writer.close()
+    }
 }
