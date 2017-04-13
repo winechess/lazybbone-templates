@@ -1,2 +1,5 @@
 server:
   port: ${serverPort}
+logging:
+  level:
+    ${group}: DEBUG

@@ -1,13 +1,15 @@
 logging:
-  level: debug
-
+  level:
+    ROOT: DEBUG
+feign:
+  hystrix:
+    enabled: true
 eureka:
   instance:
     prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: http://{url}:{port}/eureka/
-
 hystrix:
   command:
     default:
@@ -15,7 +17,6 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 10000
-
 spring:
   rabbitmq:
     host: rabbitmq
