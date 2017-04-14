@@ -1,5 +1,5 @@
 server:
-  port: ${serverPort}
+  port: 8080
 logging:
   level:
     ${group}: DEBUG

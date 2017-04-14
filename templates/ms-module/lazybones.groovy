@@ -13,7 +13,7 @@ def props = [:]
 props.group = ask('Group [com.example.root.module]: ', 'com.example.root.module').replace('-' as char, '_' as char)
 props.version = ask('Version [0.0.1]: ', '0.0.1')
 props.mainClass = ask('Main class [Application]: ', 'Application')
-props.serverPort = ask('Port to run on [8080]: ', '8080')
+//props.serverPort = ask('Port to run on [8080]: ', '8080')
 props.configDir = ask('Directory for configurations [config-repo]: ', 'config-repo')
 props.projectName = projectDir.name
 
@@ -194,7 +194,7 @@ void addProjectToDockerCompose(projectPath, props) {
                 writer << '\n'
                 writer << "  ports:"
                 writer << '\n'
-                writer << "    - ${props.serverPort}:${props.serverPort}"
+                writer << "    - 8080"
                 writer << '\n'
             }
 
