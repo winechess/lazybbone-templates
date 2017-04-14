@@ -8,21 +8,21 @@ spring:
 #          uri: https://github.com/{username}/{repo}
 #          searchPaths: folder with configs in repo (optional if repo contains only configs)
 server:
-  #SERVER_PORT: default 8888
-  port: ${serverPort}
+  port: 8080
+
 #Encryption configuration to encrypt properties in config files
 encrypt:
   #keystore settings to use encryption with an asymmetric key
   keyStore:
-    #KEYSTORE_PATH
     location: classpath:/server.jks
-    password: {KEYSTORE_PASSWORD}
-    alias: {KEY_ALIAS}
-    secret: {KEY_PASSWORD}
+    password: f865230af8c84
+    alias: config-server
+    secret: f865230af8c84
   #key to use encryption with a symmetric key
   #key: {KEY_VALUE}
+
 #user name and password to protect config server
 security:
   user:
-    name: {USER.NAME}
-    password: {USER.PASSWORD}
+    name: user
+    password: f865230af8c84

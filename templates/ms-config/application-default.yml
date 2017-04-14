@@ -1,22 +1,30 @@
 logging:
   level:
-    ROOT: DEBUG
+    ROOT: INFO
+
 feign:
   hystrix:
     enabled: true
+
 eureka:
   instance:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://{url}:{port}/eureka/
+      defaultZone: http://discovery-server:8080/eureka/
+
 hystrix:
   command:
     default:
       execution:
         isolation:
+          strategy: THREAD
           thread:
             timeoutInMilliseconds: 10000
 spring:
   rabbitmq:
     host: rabbitmq
+
+management:
+  security:
+    enabled: false
