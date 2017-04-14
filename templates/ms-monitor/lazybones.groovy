@@ -13,7 +13,7 @@ def props = [:]
 props.group = ask('Group [com.example.root.monitoring]: ', 'com.example.root.monitoring').replace('-' as char, '_' as char)
 props.version = ask('Version [0.0.1]: ', '0.0.1')
 props.mainClass = ask('Main class [MonitoringServerApplication]: ', 'MonitoringServerApplication')
-props.serverPort = ask('Port to run on [8989]: ', '8989')
+//props.serverPort = ask('Port to run on [8989]: ', '8989')
 props.configDir = ask('Directory for configurations [config-repo]: ', 'config-repo')
 props.projectName = projectDir.name
 
@@ -186,15 +186,16 @@ void addProjectToDockerCompose(projectPath, props) {
     dockerComposeFile.withWriter { writer ->
         currentConfigDump.eachLine { line ->
             if (line.contains('end includes')) {
-                writer << "\t${projectDir.name}:"
+                writer << "${projectDir.name}:"
                 writer << '\n'
-                writer << "\t\timage: ${projectDir.name}"
+                writer << "  image: ${projectDir.name}"
                 writer << '\n'
-                writer << "\t\trestart: always"
+                writer << "  restart: always"
                 writer << '\n'
-                writer << "\t\tports:"
+                writer << "  ports:"
                 writer << '\n'
-                writer << "\t\t\t- ${props.serverPort}:${props.serverPort}"
+                writer << "    - 8080"
+                writer << "    - 8989"
                 writer << '\n'
             }
 
