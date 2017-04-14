@@ -13,7 +13,7 @@ def props = [:]
 props.group = ask('Group [com.example.root.module]: ', 'com.example.root.module').replace('-' as char, '_' as char)
 props.version = ask('Version [0.0.1]: ', '0.0.1')
 props.mainClass = ask('Main class [GatewayServerApplication]: ', 'GatewayServerApplication')
-props.serverPort = ask('Port to run on [4000]: ', '4000')
+//props.serverPort = ask('Port to run on [4000]: ', '4000')
 props.configDir = ask('Directory for configurations [config-repo]: ', 'config-repo')
 props.projectName = projectDir.name
 
@@ -194,7 +194,8 @@ void addProjectToDockerCompose(projectPath, props) {
                 writer << '\n'
                 writer << "  ports:"
                 writer << '\n'
-                writer << "    - ${props.serverPort}:${props.serverPort}"
+                writer << "    - 80:8080"
+                writer << "    - 443:8443"
                 writer << '\n'
             }
 
