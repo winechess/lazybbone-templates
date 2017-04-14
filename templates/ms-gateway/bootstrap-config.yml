@@ -3,6 +3,8 @@ zuul:
   host:
     connect-timeout-millis: 20000
     socket-timeout-millis: 20000
+    max-per-route-connections: 100
+    max-total-connections: 1000
 
 hystrix:
   command:
@@ -11,7 +13,6 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 20000
-
 ribbon:
   ReadTimeout: 20000
   ConnectTimeout: 20000
