@@ -1,2 +1,2 @@
 server:
-  port: ${serverPort}
+  port: 8080
