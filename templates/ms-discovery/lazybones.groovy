@@ -199,9 +199,9 @@ void addProjectToDockerCompose(projectPath, props) {
                 writer << '\n'
                 writer << "    options:"
                 writer << '\n'
-                writer << "      max-size: 10m"
+                writer << "      max-size: \"10m\""
                 writer << '\n'
-                writer << "      max-file: 10"
+                writer << "      max-file: \"10\""
                 writer << '\n'
 
             }

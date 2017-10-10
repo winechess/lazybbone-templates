@@ -4,6 +4,6 @@ version = "${version}"
 dependencies {
 
   compile 'org.springframework.cloud:spring-cloud-config-server'
-  compile 'org.springframework.cloud:spring-boot-starter-security'
+  compile 'org.springframework.boot:spring-boot-starter-security'
   
 }
